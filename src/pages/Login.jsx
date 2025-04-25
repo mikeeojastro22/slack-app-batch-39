@@ -1,15 +1,49 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/Constants";
+import { useNavigate } from "react-router-dom";
 
 function Login(props) {
   const { onLogin } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // react hook for automatically changing the path in the url
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Add authentication here
+    try {
+      // try catch
+      // try - run the program
+      // catch - it catches the error during run time
+
+      // axios.post(url, object that contains the request body)
+
+      const loginCredentials = {
+        email,
+        password
+      }
+
+      const response = await axios.post(`${API_URL}/auth/sign_in`, loginCredentials);
+      const { data, headers } = response;
+      if(data && headers){
+        const accessToken = headers["access-token"];
+        const expiry = headers["expiry"];
+        const client = headers["client"];
+        const uid = headers["uid"];
+
+        console.log(data);
+        console.log(accessToken, expiry, client, uid);
+
+        onLogin();
+        navigate('/dashboard');
+      }
+    } catch(error) {
+      if(error){
+        return alert("Invalid credentials");
+      }
+    }
   };
 
   return (
