@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/Constants";
 import { useNavigate } from "react-router-dom";
+import { useData } from "../context/DataProvider";
 
 function Login(props) {
   const { onLogin } = props;
@@ -9,6 +10,7 @@ function Login(props) {
   const [password, setPassword] = useState("");
   // react hook for automatically changing the path in the url
   const navigate = useNavigate();
+  const { handleHeaders } = useData();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +37,9 @@ function Login(props) {
 
         console.log(data);
         console.log(accessToken, expiry, client, uid);
+
+        // keep the headers value in our context - these can now be used in other pages/components
+        handleHeaders(headers);
 
         onLogin();
         navigate('/dashboard');
