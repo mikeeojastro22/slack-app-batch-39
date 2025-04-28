@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useData } from "../context/DataProvider";
 import axios from "axios";
 import { API_URL } from "../constants/Constants";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard(props) {
   const { onLogout } = props;
   const { userHeaders } = useData();
   const [userList, setUserList] = useState([]);
+  const navigate = useNavigate();
 
   const getUsers = async () => {
     try {
@@ -31,10 +33,15 @@ function Dashboard(props) {
     }
   })
 
+  const sendMessage = () => {
+    navigate('/message');
+  }
+
   return (
     <div style={{ textAlign: "center" }}>
       <h2>Dashboard</h2>
       <p>This is my slack app. Loading of users here...</p>
+      <button onClick={sendMessage}>Message</button>
       <button onClick={onLogout}>Logout</button>
 
       {
